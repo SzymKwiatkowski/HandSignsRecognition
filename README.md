@@ -30,7 +30,7 @@ Model that were tried during testing phase:
 Voting classifier as well as other ensemble classifiers were tested, the same goes for boost classifiers.
 
 ## Currently best implemented solution:
-Current best solution is consisting of voting classifiers consisting of SVC polynominal classifier of 3rd degree and neural network tuned for application. This model currently has 93% accuracy score
+Current best solution is consisting of voting classifiers consisting of QuadraticDiscriminantAnalysisClassifier and neural network tuned for application. This model currently has 95.6% accuracy score
 
 # Test results
 The best combination of classifiers was:

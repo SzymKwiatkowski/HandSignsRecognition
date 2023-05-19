@@ -4,18 +4,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pickle
-from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import VotingClassifier
-from sklearn.svm import LinearSVC, SVC
-from sklearn.calibration import CalibratedClassifierCV
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier, MLPRegressor, BernoulliRBM
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, precision_score
-from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.preprocessing import StandardScaler
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 import os 
 
 letter_dict = {
@@ -60,23 +56,29 @@ def main():
     x = x.to_numpy()
     
     # Set filename for model to get save to or read from
-    filename = 'models/finalized_model2.sav'
+    filename = 'models/finalized_model3.sav'
 
     # Split data evenly thorought with 8 to 2 proportion
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=42, stratify=y)
     
     if testing:
         # Set polynominal SVC and it's properties
-        clf2 = SVC(kernel='poly',probability=True, degree=2, C=12.0)
+        clf2 = SVC(kernel='poly', probability=True, degree=2, C=12.0)
         
         # Neural network with custom params
         clf1 = MLPClassifier(solver='adam', activation='tanh', learning_rate='adaptive', alpha=1e-7, random_state=42, 
                              shuffle=True, batch_size=8, max_iter=800, warm_start=True, verbose=monitor_network, learning_rate_init=0.0009, power_t=0.71)
+        
+        # clf3 = GaussianNB(var_smoothing=1e-6)
+        
+        clf3 = QuadraticDiscriminantAnalysis(tol=1e-6)
+        
+        # clf3 = RandomForestClassifier(criterion='log_loss', n_estimators=160)
 
         # Set VotingClassifier to ensamble both classifiers above
-        eclf = VotingClassifier(estimators=[("mlpc", clf1), ('svc', clf2)],
+        eclf = VotingClassifier(estimators=[("mlpc", clf1), ('qda', clf3)],
                                 voting='soft',
-                                weights=[2, 2])
+                                weights=[3.2, 3.0])
         
         scaler = StandardScaler()
         scaler.fit(X_train)
