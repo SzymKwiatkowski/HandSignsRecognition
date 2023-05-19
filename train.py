@@ -15,6 +15,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, precision_score
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.preprocessing import StandardScaler
 import os 
 
 letter_dict = {
@@ -46,7 +47,7 @@ letter_dict = {
 
 def main():
     # set run flags
-    testing = False
+    testing = True
     save_model = False
     
     # load preprocessed training data
@@ -58,24 +59,29 @@ def main():
     x = x.to_numpy()
     
     # Set filename for model to get save to or read from
-    filename = 'models/finalized_model.sav'
+    filename = 'models/finalized_model2.sav'
 
     # Split data evenly thorought with 8 to 2 proportion
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=42, stratify=y)
     
     if testing:
         # Set polynominal SVC and it's properties
-        clf2 = SVC(kernel='poly',probability=True, degree=4, C=12.0)
+        clf2 = SVC(kernel='poly',probability=True, degree=2, C=12.0)
         
         # Neural network with custom params
-        clf1 = MLPClassifier(solver='adam', activation='tanh', learning_rate='adaptive', alpha=1e-5, random_state=42, 
-                             shuffle=True, batch_size=16, max_iter=1000, learning_rate_init=0.0008, power_t=0.7)
+        clf1 = MLPClassifier(solver='adam', activation='tanh', learning_rate='adaptive', alpha=1e-7, random_state=42, 
+                             shuffle=True, batch_size=8, max_iter=800, warm_start=True, verbose=4, learning_rate_init=0.00083, power_t=0.71)
 
         # Set VotingClassifier to ensamble both classifiers above
         eclf = VotingClassifier(estimators=[("mlpc", clf1), ('svc', clf2)],
                                 voting='soft',
                                 weights=[2, 2])
-
+        
+        scaler = StandardScaler()
+        scaler.fit(X_train)
+        X_train = scaler.transform(X_train)  
+        X_test = scaler.transform(X_test)
+        
         # Train and predict
         eclf.fit(X_train, y_train)
         y_predict = eclf.predict(X_test)
