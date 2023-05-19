@@ -13,6 +13,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, precision_score
 from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 hand_dict = {
     'Right': 0,
@@ -89,6 +90,10 @@ def main():
     
     print(accuracy_score(y_test, y_predict))
     print(precision_score(y_test, y_predict, average=None))
+    cm = confusion_matrix(y_test, y_predict)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
+    plt.show()
     # X = x.data[:]
     # plot_decision_boundary(X, y, clf1, 'MLPClass')
     plt.show()
