@@ -6,14 +6,16 @@ import numpy as np
 import pickle
 from matplotlib.colors import ListedColormap
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier, BaggingClassifier, ExtraTreesClassifier, VotingClassifier
-from sklearn.svm import SVC
+from sklearn.ensemble import VotingClassifier
+from sklearn.svm import LinearSVC, SVC
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier
+from sklearn.neural_network import MLPClassifier, MLPRegressor, BernoulliRBM
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, precision_score
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import os 
 
 hand_dict = {
     'Right': 0,
@@ -47,58 +49,39 @@ letter_dict = {
     'y': 23,
 }
 
-def plot_decision_boundary(X, y, classifier, title: str):
-    plt.figure(figsize=(10, 8))
-    X1, X2 = np.meshgrid(
-        np.arange(start=X[:, 0].min() - 1, stop=X[:, 0].max() + 1, step=0.01),
-        np.arange(start=X[:, 1].min() - 1, stop=X[:, 1].max() + 1, step=0.01)
-    )
-    plt.contourf(
-        X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
-        alpha=0.5, cmap=ListedColormap(('red', 'green', 'blue'))
-    )
-    plt.xlim(X1.min(), X1.max())
-    plt.ylim(X2.min(), X2.max())
-    for i, j in enumerate(np.unique(y)):
-      plt.scatter(
-          X[y == j, 0], X[y == j, 1], color=ListedColormap(('red', 'green', 'blue'))(i), label=j
-      )
-    plt.title(title)
-    plt.xlabel('petal length')
-    plt.ylabel('petal width')
-    plt.legend()
+
 
 def main():
     data = pickle.load(open('data/data.pickle', 'rb'))
+    # print(data)
     x = data['data']
     y = data['labels']
+    x = x.to_numpy()
+    filename = 'models/finalized_model.sav'
+    testing = True
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=42, stratify=y)
-    # clf4 = BaggingClassifier(KNeighborsClassifier(), max_samples=0.5, max_features=0.5)
-    clf1 = MLPClassifier()
-    clf2 = RandomForestClassifier()
-    # clf3 = SVC(gamma=0.1, kernel="rbf", probability=True)
-    # clf3 = ExtraTreesClassifier()
     
-    eclf = VotingClassifier(
-    estimators=[("mlp", clf1), ("rf", clf2)],
-    voting="soft",
-    weights=[2, 2],
-)
-    
-    eclf.fit(X_train, y_train)
-    y_predict = eclf.predict(X_test)
-    
-    print(accuracy_score(y_test, y_predict))
-    print(precision_score(y_test, y_predict, average=None))
-    cm = confusion_matrix(y_test, y_predict)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-    disp.plot()
-    plt.show()
-    # X = x.data[:]
-    # plot_decision_boundary(X, y, clf1, 'MLPClass')
-    plt.show()
-    
-    return 0
+    # X_train, X_calib, y_train, y_calib = train_test_split(X_train, y_train, test_size=0.2, shuffle=True, random_state=42, stratify=y_train)
+    if not os.path.isfile(filename) and not testing:
+        clf2 = SVC(kernel='poly',probability=True, degree=4, C=12.0)
+        clf1 = MLPClassifier(solver='adam', activation='tanh', learning_rate='adaptive', alpha=1e-5, random_state=42, 
+                             shuffle=True, batch_size=16, max_iter=1000, learning_rate_init=0.0008, power_t=0.7)
 
+        eclf = VotingClassifier(estimators=[("mlpc", clf1), ('svc', clf2)],
+                                voting='soft',
+                                weights=[2, 2])
+
+        eclf.fit(X_train, y_train)
+        y_predict = eclf.predict(X_test)
+
+        print(accuracy_score(y_test, y_predict))
+        print(precision_score(y_test, y_predict, average=None))
+        cm = confusion_matrix(y_test, y_predict)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=letter_dict.keys())
+        disp.plot()
+        plt.show()
+        if not testing:
+            pickle.dump(eclf, open(filename, 'wb'))
+    
 if __name__ == "__main__":
     main()
