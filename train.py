@@ -49,6 +49,7 @@ def main():
     # set run flags
     testing = True
     save_model = False
+    monitor_network = True
     
     # load preprocessed training data
     data = pickle.load(open('data/data.pickle', 'rb'))
@@ -70,7 +71,7 @@ def main():
         
         # Neural network with custom params
         clf1 = MLPClassifier(solver='adam', activation='tanh', learning_rate='adaptive', alpha=1e-7, random_state=42, 
-                             shuffle=True, batch_size=8, max_iter=800, warm_start=True, verbose=True, learning_rate_init=0.0009, power_t=0.71)
+                             shuffle=True, batch_size=8, max_iter=800, warm_start=True, verbose=monitor_network, learning_rate_init=0.0009, power_t=0.71)
 
         # Set VotingClassifier to ensamble both classifiers above
         eclf = VotingClassifier(estimators=[("mlpc", clf1), ('svc', clf2)],
