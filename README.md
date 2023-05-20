@@ -12,15 +12,15 @@ While preparing first data batch for training `lookup_data.ipynb` notebook was c
 ## Data distribution for letters
 Data was also experimented on based on how to fit decision boundaries into features. Visualization was a challenge and method selected for visualization was to calculate means of every x, y, z coordinate and then plot it accordingly on the plot trying to look what type of fingerpoints are more informative then the others. But prior to that boxsplots were plotted to check if data can be approximated in some way by using mean value. 
 <p align="center">
-<img src="imgs/data_x_boxplot.png" alt="Boxsplot for x" style="height: 300px; width:300px;"/>
-<img src="imgs/data_y_boxplot.png" alt="Boxsplot for y" style="height: 300px; width:300px;"/>
-<img src="imgs/data_z_boxplot.png" alt="Boxsplot for z" style="height: 300px; width:300px;"/>
+<img src="imgs/data_x_boxplot.png" alt="Boxsplot for x" style="height: 400px; width:400px;"/>
+<img src="imgs/data_y_boxplot.png" alt="Boxsplot for y" style="height: 400px; width:400px;"/>
+<img src="imgs/data_z_boxplot.png" alt="Boxsplot for z" style="height: 400px; width:400px;"/>
 </p>
 
 As can be seen above data x and y is not having many as many outliers and z data which cannot really be approximated by mean value. Afterwards using mean values data was displayed in scatterplot in 3d to check if it can be clustered properly for each letter. First goal was to visualize data in 3d with and without z to display if hypothesis set before can be used.
 <p align="center">
-<img src="imgs/data_means_for_letters.png" alt="Data means for all data" style="height: 300px; width:400px;"/>
-<img src="imgs/data_means_for_letters_woZ.png" alt="Data means with z data equal to 0" style="height: 300px; width:400px;"/>
+<img src="imgs/data_means_for_letters.png" alt="Data means for all data" style="height: 350px; width:400px;"/>
+<img src="imgs/data_means_for_letters_woZ.png" alt="Data means with z data equal to 0" style="height: 350px; width:400px;"/>
 </p>
 
 Data can be seen as to clustered together this way with too many features mixed up together so next decision was to display data in 3d for each of one finger keypoint of the same category such as: 
@@ -29,10 +29,10 @@ Data can be seen as to clustered together this way with too many features mixed 
 - TIP
 - DIP
 <p align="center">
-<img src="imgs/mcps_data_means.png" alt="Boxsplot for x" style="height: 300px; width:300px;"/>
-<img src="imgs/pip_data_means.png" alt="Boxsplot for y" style="height: 300px; width:300px;"/>
-<img src="imgs/finger_tips_data_means.png" alt="Boxsplot for x" style="height: 300px; width:300px;"/>
-<img src="imgs/dip_data_means.png" alt="Boxsplot for y" style="height: 300px; width:300px;"/>
+<img src="imgs/mcps_data_means.png" alt="Boxsplot for x" style="height: 350px; width:400px;"/>
+<img src="imgs/pip_data_means.png" alt="Boxsplot for y" style="height: 350px; width:400px;"/>
+<img src="imgs/finger_tips_data_means.png" alt="Boxsplot for x" style="height: 400px; width:400px;"/>
+<img src="imgs/dip_data_means.png" alt="Boxsplot for y" style="height: 350px; width:400px;"/>
 </p>
 
 As can be seen on images above DIP data is the only one that is hard too cluster together because of many features crossing many possible boundries. Also data is not as informative as the TIP data so decision is to drop data from training dataset completly. Another observable fact is huge disparity between z data across the board. This fact leads to hard information extraction overall because of many outliers clustered together. This problem is hard to solve by tuning model so data will be dropped completely aside for the fingertips Z data that is very influential to some letters detection such as `a`, `m`, `n`, in which fingers are displayed to the front of palm.
