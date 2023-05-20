@@ -48,7 +48,7 @@ def main():
     monitor_network = True
     
     # load preprocessed training data
-    data = pickle.load(open('data/data.pickle', 'rb'))
+    data = pickle.load(open('data/data_2.pickle', 'rb'))
     x = data['data']
     y = data['labels']
     

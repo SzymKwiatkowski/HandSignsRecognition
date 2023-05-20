@@ -1,8 +1,4 @@
 import pandas as pd
-import matplotlib
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 import pickle
 
 from sklearn.model_selection import train_test_split
@@ -41,7 +37,7 @@ letter_dict = {
 
 # Read raw dataset
 def read_datafile():
-    data = pd.read_csv("data/WZUM_dataset.csv")
+    data = pd.read_csv("data/WZUM_dataset_2.csv")
     
     return data
 
@@ -90,7 +86,7 @@ def visualize_data(data: pd.DataFrame):
 
 # Data saving function
 def save_data(x, y):
-    f = open('data/data.pickle', 'wb')
+    f = open('data/data_2.pickle', 'wb')
     pickle.dump({'data': x, 'labels': y}, f)
     f.close()
 
