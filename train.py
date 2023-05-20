@@ -56,7 +56,7 @@ def main():
     x = x.to_numpy()
     
     # Set filename for model to get save to or read from
-    filename = 'models/finalized_model4.pkl'
+    filename = 'models/finalized_model5.pkl'
 
     # Split data evenly thorought with 8 to 2 proportion
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=42, stratify=y)
@@ -98,6 +98,7 @@ def main():
         
         # Save data if flags are set and file does not exist
         if save_model and not os.path.isfile(filename):
+            print("-- Saving model --")
             pickle.dump(eclf, open(filename, 'wb'))
     
     else:
