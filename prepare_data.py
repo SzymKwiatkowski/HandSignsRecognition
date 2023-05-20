@@ -41,7 +41,7 @@ def read_datafile():
     
     return data
 
-def visualize_data(data: pd.DataFrame):
+def prepare_data(data: pd.DataFrame):
     # Set list with colum names to get rid of unnecessary columns
     cols_x = ['world_landmark_' + str(i) + '.x' for i in range(21)]
     cols_y = ['world_landmark_' + str(i) + '.y' for i in range(21)]
@@ -92,7 +92,7 @@ def save_data(x, y):
 
 def main():
     data = read_datafile()
-    x, y = visualize_data(data)
+    x, y = prepare_data(data)
     
     save_data(x, y)
     return 0
