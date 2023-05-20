@@ -43,8 +43,8 @@ letter_dict = {
 
 def main():
     # set run flags
-    testing = False
-    save_model = False
+    testing = True
+    save_model = True
     monitor_network = True
     
     # load preprocessed training data
@@ -56,7 +56,7 @@ def main():
     x = x.to_numpy()
     
     # Set filename for model to get save to or read from
-    filename = 'models/finalized_model3.pkl'
+    filename = 'models/finalized_model4.pkl'
 
     # Split data evenly thorought with 8 to 2 proportion
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=42, stratify=y)
@@ -66,8 +66,8 @@ def main():
         clf2 = SVC(kernel='poly', probability=True, degree=5, C=12.0)
         
         # Neural network with custom params
-        clf1 = MLPClassifier(solver='adam', activation='tanh', learning_rate='adaptive', alpha=1e-7, random_state=42, 
-                             shuffle=True, batch_size=8, max_iter=800, warm_start=True, verbose=monitor_network, learning_rate_init=0.0009, power_t=0.71)
+        clf1 = MLPClassifier(solver='adam', activation='relu', learning_rate='adaptive', alpha=1e-6, random_state=42, 
+                             shuffle=True, batch_size=8, max_iter=800, warm_start=True, verbose=monitor_network, learning_rate_init=0.0009, power_t=0.57)
         
         # Quadratic Classifier with low tolerance
         clf3 = QuadraticDiscriminantAnalysis(tol=1e-6)
@@ -77,7 +77,7 @@ def main():
         # Set VotingClassifier to ensamble both classifiers above
         eclf = VotingClassifier(estimators=[("mlpc", clf1), ('svc', clf2), ('qda', clf3)],
                                 voting='soft',
-                                weights=[3.15, 2.8, 3.0])
+                                weights=[3.15, 3.0, 3.2])
         
         # scaler = StandardScaler()
         # scaler.fit(X_train)

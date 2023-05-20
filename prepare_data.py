@@ -51,6 +51,18 @@ def visualize_data(data: pd.DataFrame):
     cols_y = ['world_landmark_' + str(i) + '.y' for i in range(21)]
     cols_z = ['world_landmark_' + str(i) + '.z' for i in range(21)]
     
+    # hand_p_x = ['landmark_' + str(i*4 + 1) + '.x' for i in range(5)]
+    # hand_p_y = ['landmark_' + str(i*4 + 1) + '.y' for i in range(5)]
+    hand_p_z = ['landmark_' + str(i*4) + '.z' for i in range(0, 6)]
+    cols_all_z = ['landmark_' + str(i) + '.z' for i in range(21)]
+    for el in hand_p_z:
+        cols_all_z.remove(el)
+    
+    fingertip_p_x = ['landmark_' + str(i*4 + 2) + '.x' for i in range(5)]
+    fingertip_p_y = ['landmark_' + str(i*4 + 2) + '.y' for i in range(5)]
+    fingertip_p_z = ['landmark_' + str(i*4 + 2) + '.z' for i in range(5)]
+    # print(hand_p)
+    
     # Set letters to numeric values along with labels
     data['letter'] = [letter_dict[letter] for letter in data['letter']]
     data['handedness.label'] = [hand_dict[label] for label in data['handedness.label']]
@@ -60,6 +72,12 @@ def visualize_data(data: pd.DataFrame):
     data.drop(cols_x, axis=1, inplace=True)
     data.drop(cols_y, axis=1, inplace=True)
     data.drop(cols_z, axis=1, inplace=True)
+    # data.drop(hand_p_x, axis=1, inplace=True)
+    # data.drop(hand_p_y, axis=1, inplace=True)
+    data.drop(cols_all_z, axis=1, inplace=True)
+    data.drop(fingertip_p_x, axis=1, inplace=True)
+    data.drop(fingertip_p_y, axis=1, inplace=True)
+    # data.drop(fingertip_p_z, axis=1, inplace=True)
 
     # print effect of operations
     print(data)
