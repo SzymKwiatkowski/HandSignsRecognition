@@ -37,7 +37,7 @@ letter_dict = {
 
 # Read raw dataset
 def read_datafile():
-    data = pd.read_csv("data/WZUM_dataset_2.csv")
+    data = pd.read_csv("data/WZUM_dataset_3.csv")
     
     return data
 
@@ -86,7 +86,7 @@ def prepare_data(data: pd.DataFrame):
 
 # Data saving function
 def save_data(x, y):
-    f = open('data/data_2.pickle', 'wb')
+    f = open('data/data_3.pickle', 'wb')
     pickle.dump({'data': x, 'labels': y}, f)
     f.close()
 
