@@ -89,3 +89,11 @@ As seen on graphic above matrix displays high error in terms of identifing `u` a
 </p>
 
 Error is successfully reduced and is not as big problem as previosly. Modification made is adding `QuadraticDiscriminantAnalysis` to voting classifier. This allowed to heavily reduce influence of previously wrongly detected `u` and `v` to very big extent.
+
+
+# Mlflow integration
+Training code was integrated with mlflow to monitor process of development.
+<p align="center">
+<img src="imgs/mlflow.png" alt="96% accuracy score confusion matrix" style="height: 600px; width:1000px;"/>
+</p>
+All of the necessery params of models as well as important metrics are saved after each run.

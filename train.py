@@ -94,9 +94,7 @@ def main():
     tolerance = 1e-6 * 2
     qda_weight = 3.3
     
-    
     if testing:
-        # mlflow.sklearn.autolog(log_models=True)
         with mlflow.start_run():
             # Set polynominal SVC and it's properties
             clf2 = SVC(kernel=kernel, probability=probability, degree=degree, C=C)
@@ -109,17 +107,10 @@ def main():
             # Quadratic Classifier with low tolerance
             clf3 = QuadraticDiscriminantAnalysis(tol=tolerance)
 
-            # clf3 = RandomForestClassifier(criterion='log_loss', n_estimators=160)
-
             # Set VotingClassifier to ensamble both classifiers above
             eclf = VotingClassifier(estimators=[("mlpc", clf1), ('svc', clf2), ('qda', clf3)],
                                     voting='soft',
                                     weights=[mlp_weight, svc_weight, qda_weight])
-
-            # scaler = StandardScaler()
-            # scaler.fit(X_train)
-            # X_train = scaler.transform(X_train)  
-            # X_test = scaler.transform(X_test)
 
             # Train and predict
             clf1.fit(X_train, y_train)
@@ -149,18 +140,11 @@ def main():
             cm_mlp = confusion_matrix(y_test, y_predict_mlp)
             cm_svc = confusion_matrix(y_test, y_predict_svc)
             cm_qda = confusion_matrix(y_test, y_predict_qda)
-            cms = [cm_eclf, cm_mlp, cm_svc, cm_qda]
-            labels = ['VOTING', 'MLP', 'SVC', 'QDA']
             # Display accuracy along with score and confusion matrix
             disp_eclf = ConfusionMatrixDisplay(confusion_matrix=cm_eclf, display_labels=letter_dict.keys())
             disp_mlp = ConfusionMatrixDisplay(confusion_matrix=cm_mlp, display_labels=letter_dict.keys())
             disp_svc = ConfusionMatrixDisplay(confusion_matrix=cm_svc, display_labels=letter_dict.keys())
             disp_qda = ConfusionMatrixDisplay(confusion_matrix=cm_qda, display_labels=letter_dict.keys())
-            # f, axes = plt.subplots(2, 2)
-            # for i, axe in enumerate(axes):
-            #     disp = ConfusionMatrixDisplay(confusion_matrix=cms[i], display_labels=letter_dict.keys())
-            #     disp.plot(ax=axes[i], xticks_rotation=45)
-            #     disp.ax_.set_title(labels[i])
             disp_eclf.plot()
             plt.show()
             disp_mlp.plot()
@@ -169,6 +153,7 @@ def main():
             plt.show()
             disp_qda.plot()
             plt.show()
+            
             mlflow.log_param("SVC kernel", kernel)
             mlflow.log_param("SVC probability", probability)
             mlflow.log_param("SVC degree", degree)
