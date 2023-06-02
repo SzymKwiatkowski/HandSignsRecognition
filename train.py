@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, precision_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, f1_score
 import os 
 from urllib.parse import urlparse
 import mlflow
@@ -54,7 +54,7 @@ def eval_metrics(actual, pred):
 
 def main():
     # set run flags
-    testing = True
+    testing = False
     save_model = False
     monitor_network = True
     
@@ -67,7 +67,7 @@ def main():
     x = x.to_numpy()
     
     # Set filename for model to get save to or read from
-    filename = 'models/finalized_model5.pkl'
+    filename = 'models/model.pkl'
 
     # Split data evenly thorought with 8 to 2 proportion
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True, random_state=42, stratify=y)
@@ -128,6 +128,7 @@ def main():
             accuracy_svc = accuracy_score(y_test, y_predict_svc)
             accuracy_qda = accuracy_score(y_test, y_predict_qda)
             precision = precision_score(y_test, y_predict_eclf, average=None)
+            f1 = f1_score(y_test, y_predict_eclf, average='weighted')
             print(f"Accuracy eclf: {accuracy_eclf}")
             print(f"Accuracy mlp: {accuracy_mlp}")
             print(f"Accuracy svc: {accuracy_svc}")
@@ -136,6 +137,7 @@ def main():
             print(f"Root mean square error: {rmse}")
             print(f"R2 Coefficient determinator: {r2}")
             print(f"Mean absolute error: {mae}")
+            print(f"F1 score: {f1}")
             cm_eclf = confusion_matrix(y_test, y_predict_eclf)
             cm_mlp = confusion_matrix(y_test, y_predict_mlp)
             cm_svc = confusion_matrix(y_test, y_predict_svc)
@@ -171,6 +173,7 @@ def main():
             mlflow.log_metric("rmse", rmse)
             mlflow.log_metric("r2", r2)
             mlflow.log_metric("mae", mae)
+            mlflow.log_metric("f1 score", f1)
             mlflow.log_metric("Voting classifier Accuracy", accuracy_eclf)
             mlflow.log_metric("MLP Accuracy", accuracy_mlp)
             mlflow.log_metric("SVC Accuracy", accuracy_svc)
