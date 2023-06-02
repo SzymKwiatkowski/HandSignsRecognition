@@ -68,6 +68,18 @@ The best combination of classifiers was:
 
 Some of the major things to mention in terms of every step of implementation is listed below. Every single one is using voting classifier
 
+
+## Using test script
+To use test script there is a need of specifing:
+- dataset file path
+- path to model
+- results file path
+
+Example of usage:
+```bash
+python3 test.py data/WZUM_dataset_3.csv models/model.pkl result.json
+```
+
 ## First model created with 81% accuracy
 <p align="center">
 <img src="imgs/confusion_matrix_first_ensembled_model.png" alt="81% accuracy score confusion matrix" style="height: 500px; width:700px;"/>
@@ -98,14 +110,3 @@ Training code was integrated with mlflow to monitor process of development.
 </p>
 All of the necessery params of models as well as important metrics are saved after each run.
 
-
-# Using test script
-To use test script there is a need of specifing:
-- dataset file path
-- path to model
-- results file path
-
-Example of usage:
-```bash
-python3 test.py data/WZUM_dataset_3.csv models/model.pkl result.json
-```
