@@ -104,6 +104,7 @@ def main():
     model_path = Path(args.model_path)
     data = read_datafile(data_file_path)
     x, y = prepare_data(data)
+    x = x.to_numpy()
 
     model = pickle.load(open(model_path, 'rb'))
         
