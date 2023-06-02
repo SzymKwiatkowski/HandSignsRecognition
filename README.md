@@ -97,3 +97,15 @@ Training code was integrated with mlflow to monitor process of development.
 <img src="imgs/mlflow.png" alt="96% accuracy score confusion matrix" style="height: 600px; width:1000px;"/>
 </p>
 All of the necessery params of models as well as important metrics are saved after each run.
+
+
+# Using test script
+To use test script there is a need of specifing:
+- dataset file path
+- path to model
+- results file path
+
+Example of usage:
+```bash
+python3 test.py data/WZUM_dataset_3.csv models/model.pkl result.json
+```
