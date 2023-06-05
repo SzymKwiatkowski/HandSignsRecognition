@@ -50,9 +50,7 @@ def prepare_data(data: pd.DataFrame):
     cols_x = ['world_landmark_' + str(i) + '.x' for i in range(21)]
     cols_y = ['world_landmark_' + str(i) + '.y' for i in range(21)]
     cols_z = ['world_landmark_' + str(i) + '.z' for i in range(21)]
-    
-    # hand_p_x = ['landmark_' + str(i*4 + 1) + '.x' for i in range(5)]
-    # hand_p_y = ['landmark_' + str(i*4 + 1) + '.y' for i in range(5)]
+
     hand_p_z = ['landmark_' + str(i*4) + '.z' for i in range(0, 6)]
     cols_all_z = ['landmark_' + str(i) + '.z' for i in range(21)]
     for el in hand_p_z:
@@ -60,8 +58,6 @@ def prepare_data(data: pd.DataFrame):
     
     fingertip_p_x = ['landmark_' + str(i*4 + 2) + '.x' for i in range(5)]
     fingertip_p_y = ['landmark_' + str(i*4 + 2) + '.y' for i in range(5)]
-    fingertip_p_z = ['landmark_' + str(i*4 + 2) + '.z' for i in range(5)]
-    # print(hand_p)
     
     # Set letters to numeric values along with labels
     data['letter'] = [letter_dict[letter] for letter in data['letter']]
@@ -72,15 +68,9 @@ def prepare_data(data: pd.DataFrame):
     data.drop(cols_x, axis=1, inplace=True)
     data.drop(cols_y, axis=1, inplace=True)
     data.drop(cols_z, axis=1, inplace=True)
-    # data.drop(hand_p_x, axis=1, inplace=True)
-    # data.drop(hand_p_y, axis=1, inplace=True)
     data.drop(cols_all_z, axis=1, inplace=True)
     data.drop(fingertip_p_x, axis=1, inplace=True)
     data.drop(fingertip_p_y, axis=1, inplace=True)
-    # data.drop(fingertip_p_z, axis=1, inplace=True)
-
-    # print effect of operations
-    print(data)
 
     # Split to features and data
     y = data['letter']
@@ -88,20 +78,23 @@ def prepare_data(data: pd.DataFrame):
 
     return x, y
 
-def save_results(accuracy, f1, result_file_path):
-    f = open(result_file_path, 'w')
-    json.dump({'accuracy': accuracy, 'f1_score': f1}, f)
-    f.close()
+def save_results(y_predict, result_file_path):
+    num_dict = dict()
+    for key in letter_dict.keys():
+        num_dict[letter_dict[key]] = key
+    y_pred_labeled = [num_dict[val] for val in y_predict]
+    df = pd.DataFrame({'letter':y_pred_labeled})
+    df.to_csv(result_file_path, index=False)
+    
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('data_file_path', type=str)
-    parser.add_argument('model_path', type=str)
     parser.add_argument('result_file_path', type=str)
     args = parser.parse_args()
     data_file_path = Path(args.data_file_path)
     result_file_path = Path(args.result_file_path)
-    model_path = Path(args.model_path)
+    model_path = Path('models/model.pkl')
     data = read_datafile(data_file_path)
     x, y = prepare_data(data)
     x = x.to_numpy()
@@ -109,12 +102,8 @@ def main():
     model = pickle.load(open(model_path, 'rb'))
         
     y_predict = model.predict(x)
-    accuracy = accuracy_score(y, y_predict)
-    f1 = f1_score(y, y_predict, average='weighted')
-    print(accuracy)
-    print(f1)
     
-    save_results(accuracy, f1, result_file_path)
+    save_results(y_predict, result_file_path)
 
     return 0
 
