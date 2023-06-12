@@ -60,7 +60,10 @@ def prepare_data(data: pd.DataFrame):
     
     # Set letters to numeric values along with labels
     data['letter'] = [letter_dict[letter] for letter in data['letter']]
-    data['handedness.label'] = [hand_dict[label] for label in data['handedness.label']]
+    if ('handedness' in data.columns):
+        data.drop(['Unnamed: 0', 'handedness'], axis=1, inplace=True)
+    else: 
+        data.drop(['Unnamed: 0', 'handedness.score', 'handedness.label'], axis=1, inplace=True)
     
     # Drop not needed columns
     data.drop(['Unnamed: 0', 'handedness.score'], axis=1, inplace=True)
