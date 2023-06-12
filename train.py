@@ -54,7 +54,7 @@ def eval_metrics(actual, pred):
 
 def main():
     # set run flags
-    testing = False
+    testing = True
     save_model = False
     monitor_network = True
     

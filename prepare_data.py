@@ -61,10 +61,10 @@ def prepare_data(data: pd.DataFrame):
     
     # Set letters to numeric values along with labels
     data['letter'] = [letter_dict[letter] for letter in data['letter']]
-    data['handedness.label'] = [hand_dict[label] for label in data['handedness.label']]
+    # data['handedness.label'] = [hand_dict[label] for label in data['handedness.label']]
     
     # Drop not needed columns
-    data.drop(['Unnamed: 0', 'handedness.score'], axis=1, inplace=True)
+    data.drop(['Unnamed: 0', 'handedness.score', 'handedness.label'], axis=1, inplace=True)
     data.drop(cols_x, axis=1, inplace=True)
     data.drop(cols_y, axis=1, inplace=True)
     data.drop(cols_z, axis=1, inplace=True)

@@ -2,8 +2,7 @@ import pandas as pd
 import pickle
 import argparse
 from pathlib import Path
-import json
-
+import os
 from sklearn.metrics import accuracy_score, f1_score
 
 
@@ -84,7 +83,7 @@ def save_results(y_predict, result_file_path):
         num_dict[letter_dict[key]] = key
     y_pred_labeled = [num_dict[val] for val in y_predict]
     df = pd.DataFrame({'letter':y_pred_labeled})
-    df.to_csv(result_file_path, index=False)
+    df.to_csv(result_file_path, sep='\t', encoding='utf-8', index=False)
     
 
 def main():
@@ -94,7 +93,7 @@ def main():
     args = parser.parse_args()
     data_file_path = Path(args.data_file_path)
     result_file_path = Path(args.result_file_path)
-    model_path = Path('models/model.pkl')
+    model_path = os.path.realpath(os.path.dirname(__file__)) + "/models/model.pkl"
     data = read_datafile(data_file_path)
     x, y = prepare_data(data)
     x = x.to_numpy()

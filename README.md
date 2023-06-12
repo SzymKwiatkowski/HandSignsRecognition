@@ -1,4 +1,4 @@
-# Hand signs recognition project
+# [Hand signs recognition project](https://github.com/SzymKwiatkowski/HandSignsRecognition)
 Project is dedicated to recognizing hand signs with simple machine learning application.
 
 # Preparing data
